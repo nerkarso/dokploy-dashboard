@@ -11,7 +11,11 @@
 			"**/src/**/*",
 			"**/.vscode/**/*",
 			"**/index.html",
+			"**/*.json",
+			"**/*.js",
+			"**/*.ts",
 			"**/vite.config.ts",
+			"!**/src/lib/dokploy/**/*",
 			"!**/src/routeTree.gen.ts",
 			"!**/src/styles.css"
 		]

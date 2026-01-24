@@ -10,8 +10,9 @@
 
 To run this application:
 
-```bash
+```sh
 bun install
+bun --env-file=.env run openapi
 bun run dev
 ```
 
@@ -19,7 +20,7 @@ bun run dev
 
 To build this application for production:
 
-```bash
+```sh
 bun run build
 ```
 
@@ -27,7 +28,7 @@ bun run build
 
 This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
 
-```bash
+```sh
 bun run test
 ```
 
@@ -35,7 +36,7 @@ bun run test
 
 This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
 
-```bash
+```sh
 bun run lint
 bun run format
 bun run check
