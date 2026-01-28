@@ -6,3 +6,15 @@ export type ContainerData = {
 	state: string;
 	status: string;
 };
+
+export type Service = {
+	id: string;
+	name: string;
+	type: 'application' | 'compose';
+	status: 'running' | 'done' | 'error' | 'idle' | (string & {});
+	createdAt: string;
+	project: {
+		id: string;
+		name: string;
+	};
+};
