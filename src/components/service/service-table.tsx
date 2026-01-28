@@ -16,14 +16,14 @@ interface ServiceTableProps {
 
 export function ServiceTable({ services }: ServiceTableProps) {
 	return (
-		<div className="rounded-md border bg-muted/30">
+		<div className="rounded-lg border bg-muted/30">
 			<Table>
 				<TableHeader>
 					<TableRow>
 						<TableHead>Service</TableHead>
 						<TableHead>Project</TableHead>
-						<TableHead>Type</TableHead>
 						<TableHead>Status</TableHead>
+						<TableHead>Type</TableHead>
 						<TableHead className="text-right">Created At</TableHead>
 					</TableRow>
 				</TableHeader>
@@ -36,12 +36,6 @@ export function ServiceTable({ services }: ServiceTableProps) {
 								<TableCell className="font-medium">{service.name}</TableCell>
 								<TableCell>{service.project.name}</TableCell>
 								<TableCell>
-									<div className="flex items-center gap-2 capitalize text-muted-foreground">
-										{Icon && <Icon size={16} />}
-										{service.type}
-									</div>
-								</TableCell>
-								<TableCell>
 									<div className="flex items-center gap-2">
 										<div
 											className={cn(
@@ -52,8 +46,14 @@ export function ServiceTable({ services }: ServiceTableProps) {
 										<span className="capitalize">{service.status}</span>
 									</div>
 								</TableCell>
+								<TableCell>
+									<div className="flex items-center gap-2 capitalize text-muted-foreground">
+										{Icon && <Icon size={16} />}
+										{service.type}
+									</div>
+								</TableCell>
 								<TableCell className="text-right text-muted-foreground whitespace-nowrap">
-									{new Date(service.createdAt).toLocaleString()}
+									{new Date(service.createdAt).toDateString()}
 								</TableCell>
 							</TableRow>
 						);

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { STATUS_COLORS, TYPE_ICONS } from '@/config/constants';
 import { cn } from '@/lib/utils';
-import type { Service } from '@/types/dokploy';
+import { type Service, ServiceStatus } from '@/types/dokploy';
 
 interface ServiceGridProps {
 	services: Service[];
@@ -22,7 +22,11 @@ function ServiceCard({ service }: { service: Service }) {
 
 	return (
 		<Card className="bg-muted/30 relative flex flex-col">
-			{['done', 'running', 'error'].includes(service.status) && (
+			{[
+				ServiceStatus.DONE,
+				ServiceStatus.RUNNING,
+				ServiceStatus.ERROR,
+			].includes(service.status as ServiceStatus) && (
 				<span
 					className={cn(
 						'rounded-full size-3 absolute -top-1 -right-1 z-10',
@@ -34,7 +38,7 @@ function ServiceCard({ service }: { service: Service }) {
 				<CardTitle className="leading-normal break-all flex flex-wrap items-center gap-x-2">
 					<span>{service.project.name}</span>
 					<span className="text-xs text-ring">/</span>
-					<span className="">{service.name}</span>
+					<span>{service.name}</span>
 				</CardTitle>
 				{Icon && <Icon size={18} className="text-muted-foreground shrink-0" />}
 			</CardHeader>

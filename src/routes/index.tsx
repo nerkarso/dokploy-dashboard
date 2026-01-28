@@ -1,8 +1,8 @@
-import { ServiceSection } from '@/components/service/service-section';
+import { ServiceGrid } from '@/components/service/service-grid';
+import { ServiceTable } from '@/components/service/service-table';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { getServices } from '@/server/functions';
-import type { Service } from '@/types/dokploy';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { LayoutGridIcon, ListIcon } from 'lucide-react';
@@ -44,7 +44,6 @@ function RouteComponent() {
 function ServiceRoot() {
 	const initialData = Route.useLoaderData();
 	const { view } = Route.useSearch() as ServiceSearch;
-	const navigate = Route.useNavigate();
 
 	const { data } = useSuspenseQuery({
 		queryKey: ['services'],
@@ -52,62 +51,52 @@ function ServiceRoot() {
 		initialData: initialData,
 		refetchInterval: 1000,
 	});
-	const { services } = data as { services: Service[] };
+	const { services } = data;
 
 	return (
 		<div className="space-y-6">
 			<div className="flex justify-end">
-				<ButtonGroup>
-					<Button
-						variant={view === 'grid' ? 'outline' : 'secondary'}
-						size="icon"
-						onClick={() =>
-							navigate({
-								search: (prev: ServiceSearch) => ({ ...prev, view: 'grid' }),
-							})
-						}
-					>
-						<LayoutGridIcon className="size-4" />
-					</Button>
-					<Button
-						variant={view === 'table' ? 'outline' : 'secondary'}
-						size="icon"
-						onClick={() =>
-							navigate({
-								search: (prev: ServiceSearch) => ({ ...prev, view: 'table' }),
-							})
-						}
-					>
-						<ListIcon className="size-4" />
-					</Button>
-				</ButtonGroup>
+				<ViewToggle />
 			</div>
-			<div className="space-y-8">
-				<ServiceSection
-					title="Building"
-					services={services}
-					filter={{ status: 'running' }}
-					view={view}
-				/>
-				<ServiceSection
-					title="Running"
-					services={services}
-					filter={{ status: 'done' }}
-					view={view}
-				/>
-				<ServiceSection
-					title="Error"
-					services={services}
-					filter={{ status: 'error' }}
-					view={view}
-				/>
-				<ServiceSection
-					title="Stopped"
-					services={services}
-					filter={{ status: 'idle' }}
-					view={view}
-				/>
+			<div>
+				{view === 'grid' ? (
+					<ServiceGrid services={services} />
+				) : (
+					<ServiceTable services={services} />
+				)}
 			</div>
 		</div>
+	);
+}
+
+function ViewToggle() {
+	const navigate = Route.useNavigate();
+	const { view } = Route.useSearch() as ServiceSearch;
+
+	return (
+		<ButtonGroup>
+			<Button
+				variant={view === 'grid' ? 'outline' : 'secondary'}
+				size="icon"
+				onClick={() =>
+					navigate({
+						search: (prev: ServiceSearch) => ({ ...prev, view: 'grid' }),
+					})
+				}
+			>
+				<LayoutGridIcon className="size-4" />
+			</Button>
+			<Button
+				variant={view === 'table' ? 'outline' : 'secondary'}
+				size="icon"
+				onClick={() =>
+					navigate({
+						search: (prev: ServiceSearch) => ({ ...prev, view: 'table' }),
+					})
+				}
+			>
+				<ListIcon className="size-4" />
+			</Button>
+		</ButtonGroup>
 	);
 }

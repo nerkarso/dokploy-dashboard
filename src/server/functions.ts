@@ -1,10 +1,16 @@
 import { projectAll } from '@/lib/dokploy';
+import {
+	type Project,
+	type Service,
+	ServiceStatus,
+	ServiceType,
+} from '@/types/dokploy';
 import { createServerFn } from '@tanstack/react-start';
 import _ from 'lodash';
 
 export const getServices = createServerFn().handler(async () => {
-	const projects: any[] = [];
-	let services: any[] = [];
+	const projects: Project[] = [];
+	let services: Service[] = [];
 
 	const projectsRes = await projectAll();
 	const projectsData = projectsRes.data as any[];
@@ -16,8 +22,9 @@ export const getServices = createServerFn().handler(async () => {
 		project.environments.forEach((env: any) => {
 			env.applications.forEach((application: any) => {
 				services.push({
+					id: application.applicationId,
 					name: application.name,
-					type: 'application',
+					type: ServiceType.APPLICATION,
 					status: application.applicationStatus,
 					createdAt: application.createdAt,
 					domains: application.domains.map((domain: any) => {
@@ -33,8 +40,9 @@ export const getServices = createServerFn().handler(async () => {
 			});
 			env.compose.forEach((compose: any) => {
 				services.push({
+					id: compose.composeId,
 					name: compose.name,
-					type: 'compose',
+					type: ServiceType.COMPOSE,
 					status: compose.composeStatus,
 					createdAt: compose.createdAt,
 					domains: compose.domains.map((domain: any) => {
@@ -51,7 +59,21 @@ export const getServices = createServerFn().handler(async () => {
 		});
 	});
 
-	services = _.sortBy(services, 'project.name', 'name');
+	const statusOrder = [
+		ServiceStatus.RUNNING,
+		ServiceStatus.ERROR,
+		ServiceStatus.DONE,
+		ServiceStatus.IDLE,
+	];
+	services = _.orderBy(
+		services,
+		[
+			(s) => statusOrder.indexOf(s.status as ServiceStatus),
+			'project.name',
+			'name',
+		],
+		['asc', 'asc', 'asc'],
+	);
 
 	return {
 		projects,

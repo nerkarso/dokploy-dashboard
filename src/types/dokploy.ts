@@ -7,14 +7,32 @@ export type ContainerData = {
 	status: string;
 };
 
+export type Project = {
+	id: string;
+	name: string;
+};
+
+export enum ServiceStatus {
+	RUNNING = 'running',
+	DONE = 'done',
+	ERROR = 'error',
+	IDLE = 'idle',
+}
+
+export enum ServiceType {
+	APPLICATION = 'application',
+	COMPOSE = 'compose',
+}
+
 export type Service = {
 	id: string;
 	name: string;
-	type: 'application' | 'compose';
-	status: 'running' | 'done' | 'error' | 'idle' | (string & {});
+	type: ServiceType | (string & {});
+	status: ServiceStatus | (string & {});
 	createdAt: string;
 	project: {
 		id: string;
 		name: string;
 	};
+	domains: string[];
 };
