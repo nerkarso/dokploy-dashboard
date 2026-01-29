@@ -9,6 +9,7 @@ import {
 import { STATUS_COLORS, TYPE_ICONS } from '@/config/constants';
 import { cn } from '@/lib/utils';
 import type { Service } from '@/types/dokploy';
+import { ServiceActions } from './service-actions';
 
 interface ServiceTableProps {
 	services: Service[];
@@ -25,6 +26,7 @@ export function ServiceTable({ services }: ServiceTableProps) {
 						<TableHead>Status</TableHead>
 						<TableHead>Type</TableHead>
 						<TableHead className="text-right">Created At</TableHead>
+						<TableHead className="text-right">Actions</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -54,6 +56,9 @@ export function ServiceTable({ services }: ServiceTableProps) {
 								</TableCell>
 								<TableCell className="text-right text-muted-foreground whitespace-nowrap">
 									{new Date(service.createdAt).toDateString()}
+								</TableCell>
+								<TableCell className="text-right">
+									<ServiceActions service={service} />
 								</TableCell>
 							</TableRow>
 						);

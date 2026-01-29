@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { STATUS_COLORS, TYPE_ICONS } from '@/config/constants';
 import { cn } from '@/lib/utils';
 import { type Service, ServiceStatus } from '@/types/dokploy';
+import { ServiceActions } from './service-actions';
 
 interface ServiceGridProps {
 	services: Service[];
@@ -42,10 +43,13 @@ function ServiceCard({ service }: { service: Service }) {
 				</CardTitle>
 				{Icon && <Icon size={18} className="text-muted-foreground shrink-0" />}
 			</CardHeader>
-			<CardContent className="mt-auto">
+			<CardContent className="mt-auto flex items-end justify-between gap-2">
 				<span className="text-xs text-muted-foreground">
 					{new Date(service.createdAt).toDateString()}
 				</span>
+				<div className="-mb-2">
+					<ServiceActions service={service} />
+				</div>
 			</CardContent>
 		</Card>
 	);
