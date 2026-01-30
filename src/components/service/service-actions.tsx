@@ -3,48 +3,56 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuPortal,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import type { Service } from '@/types/dokploy';
-import { MoreHorizontal } from 'lucide-react';
+import { Link2Icon, RocketIcon } from 'lucide-react';
+import { useState } from 'react';
+import { DeploymentsDrawer } from './deployments-drawer';
 
 interface ServiceActionsProps {
 	service: Service;
 }
 
 export function ServiceActions({ service }: ServiceActionsProps) {
+	const [deploymentsOpen, setDeploymentsOpen] = useState(false);
+
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size="icon-sm" className="size-6">
-					<MoreHorizontal />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				{service.domains && service.domains.length > 0 ? (
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger>Domains</DropdownMenuSubTrigger>
-						<DropdownMenuPortal>
-							<DropdownMenuSubContent>
-								{service.domains.map((domain) => (
-									<DropdownMenuItem
-										key={domain}
-										onClick={() => window.open(domain, '_blank')}
-									>
-										{domain}
-									</DropdownMenuItem>
-								))}
-							</DropdownMenuSubContent>
-						</DropdownMenuPortal>
-					</DropdownMenuSub>
-				) : (
-					<DropdownMenuItem disabled>No domains</DropdownMenuItem>
-				)}
-			</DropdownMenuContent>
-		</DropdownMenu>
+		<div className="flex gap-2 justify-end">
+			{service.domains && service.domains.length > 0 && (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="ghost" size="icon-sm" className="size-7">
+							<Link2Icon />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end" className="w-full max-w-60">
+						{service.domains.map((domain) => (
+							<DropdownMenuItem
+								key={domain}
+								onClick={() => window.open(domain, '_blank')}
+								className="overflow-hidden"
+							>
+								<span className="truncate">{domain}</span>
+							</DropdownMenuItem>
+						))}
+					</DropdownMenuContent>
+				</DropdownMenu>
+			)}
+			<Button
+				variant="ghost"
+				size="icon-sm"
+				className="size-7"
+				onClick={() => setDeploymentsOpen(true)}
+			>
+				<RocketIcon />
+			</Button>
+
+			<DeploymentsDrawer
+				open={deploymentsOpen}
+				onOpenChange={setDeploymentsOpen}
+				service={service}
+			/>
+		</div>
 	);
 }

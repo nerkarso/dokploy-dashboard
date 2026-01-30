@@ -27,6 +27,7 @@ export enum ServiceType {
 export type Service = {
 	id: string;
 	name: string;
+	appName?: string;
 	type: ServiceType | (string & {});
 	status: ServiceStatus | (string & {});
 	createdAt: string;
@@ -35,4 +36,19 @@ export type Service = {
 		name: string;
 	};
 	domains: string[];
+};
+
+export enum DeploymentStatus {
+	RUNNING = 'running',
+	DONE = 'done',
+	ERROR = 'error',
+}
+
+export type Deployment = {
+	deploymentId: string;
+	title: string | null;
+	status: DeploymentStatus | (string & {});
+	logPath: string;
+	createdAt: string;
+	description?: string | null;
 };

@@ -47,7 +47,7 @@ function ServiceCard({ service }: { service: Service }) {
 				<span className="text-xs text-muted-foreground">
 					{new Date(service.createdAt).toDateString()}
 				</span>
-				<div className="-mb-2">
+				<div className="-mb-1">
 					<ServiceActions service={service} />
 				</div>
 			</CardContent>

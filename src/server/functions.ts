@@ -1,5 +1,10 @@
-import { projectAll } from '@/lib/dokploy';
 import {
+	deploymentAll,
+	deploymentAllByCompose,
+	projectAll,
+} from '@/lib/dokploy';
+import {
+	type Deployment,
 	type Project,
 	type Service,
 	ServiceStatus,
@@ -80,3 +85,52 @@ export const getServices = createServerFn().handler(async () => {
 		services,
 	};
 });
+
+export const getDeployments = createServerFn()
+	.inputValidator((data: { serviceId: string; serviceType: string }) => data)
+	.handler(async ({ data }): Promise<Deployment[]> => {
+		try {
+			let response: { data?: unknown; error?: unknown };
+
+			if (data.serviceType === ServiceType.COMPOSE) {
+				response = await deploymentAllByCompose({
+					query: { composeId: data.serviceId },
+				});
+			} else {
+				response = await deploymentAll({
+					query: { applicationId: data.serviceId },
+				});
+			}
+
+			if (response.error) {
+				console.error('Error fetching deployments:', response.error);
+				return [];
+			}
+
+			const deployments = response.data as
+				| Array<{
+						deploymentId: string;
+						title: string | null;
+						status: string;
+						logPath: string;
+						createdAt: string;
+						description?: string | null;
+				  }>
+				| undefined;
+			if (!deployments) {
+				return [];
+			}
+
+			return deployments.map((d) => ({
+				deploymentId: d.deploymentId,
+				title: d.title,
+				status: d.status,
+				logPath: d.logPath,
+				createdAt: d.createdAt,
+				description: d.description,
+			}));
+		} catch (error) {
+			console.error('Failed to fetch deployments:', error);
+			return [];
+		}
+	});
