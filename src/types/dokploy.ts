@@ -52,3 +52,44 @@ export type Deployment = {
 	createdAt: string;
 	description?: string | null;
 };
+
+export type DokployProject = {
+	projectId: string;
+	name: string;
+	description: string;
+	createdAt: Date;
+	organizationId: string;
+	env: string;
+	environments: Environment[];
+	projectTags: any[];
+};
+
+export type Environment = {
+	name: string;
+	environmentId: string;
+	isDefault: boolean;
+	applications: Application[];
+	mariadb: any[];
+	mongo: any[];
+	mysql: Mysql[];
+	postgres: any[];
+	redis: any[];
+	compose: Compose[];
+	libsql: any[];
+};
+
+export type Application = {
+	applicationId: string;
+	name: string;
+	applicationStatus: ServiceStatus;
+};
+
+export type Compose = {
+	composeId: string;
+	name: string;
+	composeStatus: ServiceStatus;
+};
+
+export type Mysql = {
+	mysqlId: string;
+};
